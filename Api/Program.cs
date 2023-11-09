@@ -1,4 +1,4 @@
-﻿using Api.DepencyRegistration;
+using Api.DepencyRegistration;
 using Api.Middlewares;
 using Microsoft.OpenApi.Models;
 using System.Reflection;
@@ -17,6 +17,7 @@ builder.Services.AddRouting(options => options.LowercaseUrls = true);
 builder.Services.AddControllers().AddNewtonsoftJson();
 
 builder.Services.AddEndpointsApiExplorer();
+
 builder.Services.AddSwaggerGen(options =>
 {
     options.SwaggerDoc("v1", new OpenApiInfo
@@ -34,6 +35,12 @@ builder.Services.AddRepositories(builder.Configuration.GetConnectionString("WebA
 
 var app = builder.Build();
 
+app.UseCors(builder => builder
+       .AllowAnyHeader()
+       .AllowAnyMethod()
+       .AllowAnyOrigin()
+    );
+
 app.UseSwagger(option => option.SerializeAsV2 = true);
 app.UseSwaggerUI();
 
@@ -46,6 +53,3 @@ app.UseMiddleware<GlobalExceptionHandlerMiddleware>();
 app.MapControllers();
 
 app.Run();
-
-
-
